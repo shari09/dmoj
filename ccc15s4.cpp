@@ -1,6 +1,6 @@
 #include <bits/stdc++.h>
-#define vi vector<int>
 #define vI vector<Island>
+#define pii pair<int, int>
 #define for(n, i, m) for (int n = i; n < m; n++)
 
 using namespace std;
@@ -11,76 +11,46 @@ struct Island {
   int rockHeight;
 };
 
-struct Route {
-  int islandNum;
-  int totalTime;
-  int destroyedHeight;
-  vi visited;
-};
-
-struct CompareTime {
-  bool operator() (Route const& a, Route const& b) {
-    return a.totalTime > b.totalTime;
-  }
-};
-
 vI islands[2001];
 int height, numIslands, numRoutes;
 
+
 int solve(int start, int end) {
-  priority_queue<Route, vector<Route>, CompareTime> allRoutes;
-  Route route;
-  int runNum{0};
-  for (i, 0, islands[start].size()) {
-    Island island = islands[start][i];
-    route.islandNum = island.islandNum;
-    route.totalTime = island.time;
-    route.destroyedHeight = island.rockHeight;
-    route.visited = {start};
+  int minDist[2001][201];
+  memset(minDist, 0x3f3f3f3f, sizeof(minDist));
+  bool visited[2001]{};
 
-    if (route.destroyedHeight < height) {
-      allRoutes.push(route);
-    }
-  }
+  priority_queue<pii, vector<pii>, greater<pii>> q;
+  visited[start] = true;
+  q.push({0, start});
+  minDist[start][0] = 0;
 
+  Island target;
+  while (!q.empty()) {
+    int cur = q.top().second;
+    q.pop();
+    visited[cur] = false;
 
-  Route curRoute;
-  Island curIsland;
-  while(!allRoutes.empty()) {
-    curRoute = allRoutes.top();
-    allRoutes.pop();
-
-    if (curRoute.islandNum == end) {
-      cout << runNum << '\n';
-      return curRoute.totalTime;
-    }
-
-    //going through all the neighbours of that node
-    
-    for (i, 0, islands[curRoute.islandNum].size()) {
-       curIsland = islands[curRoute.islandNum][i];
-
-      //if it's not visited
-      
-      if (find(curRoute.visited.begin(), curRoute.visited.end(), curIsland.islandNum) == curRoute.visited.end()) {
-        route.islandNum = curIsland.islandNum;
-        route.totalTime = curIsland.time+curRoute.totalTime;
-        route.destroyedHeight = curIsland.rockHeight+curRoute.destroyedHeight;
-        route.visited = curRoute.visited;
-        route.visited.push_back(curIsland.islandNum);
-
-        //if the ship's not destroyed
-        if (route.destroyedHeight < height) {
-          allRoutes.push(route);
+    for (i, 0, islands[cur].size()) { //loop through adjacent islands
+      target = islands[cur][i];
+      for (j, 0, height-target.rockHeight) { //for every valid rock height
+        int time = minDist[cur][j] + target.time; //time spent getting here + time need to reach new island
+        if (time < minDist[target.islandNum][j+target.rockHeight]) {
+          minDist[target.islandNum][j+target.rockHeight] = time;
+          if (!visited[target.islandNum]) {
+            visited[target.islandNum] = true;
+            q.push({time, target.islandNum});
+          }
         }
       }
-      
     }
-    runNum++;
 
   }
-  cout << runNum << '\n';
-  return -1;
+  int shortest = 0x3f3f3f3f;
+  for (i, 0, 201) {
+    shortest = min(minDist[end][i], shortest);
+  }
+  return shortest;
 }
 
 int main() {
@@ -109,7 +79,8 @@ int main() {
 
   int minTime = solve(start, end);
 
-  cout << minTime << '\n';
+  if (minTime != 0x3f3f3f3f) cout << minTime << '\n';
+  else cout << -1 << '\n';
 
   return 0;
 }

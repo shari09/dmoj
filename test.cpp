@@ -1,11 +1,12 @@
-#include <iostream>
-#include <string>
+#include <bits/stdc++.h>
 
+using namespace std;
+
+
+int world[5001][5001];
 int main() {
-  int num{};
-  printf("Enter a number: ");
-  std::cin >> num;
-  printf("The number you entered is %d\n", num);
-
+  bool i[1600][3600]{};
+  i[600][2000] = true;
+  memset(i, 0, sizeof(i));
   return 0;
 }

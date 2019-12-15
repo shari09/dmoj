@@ -1,47 +1,32 @@
 #include <bits/stdc++.h>
-
+#define for(n, i, m) for(int n = i; n < m; n++)
 using namespace std;
 
 int main() {
   ios_base::sync_with_stdio(false);
   cin.tie(NULL);
 
-  int shirtNum, eventNum, numDays;
-  for (int testcase = 0; testcase < 10; testcase++) {
+  int numShirts, numEvents, numDays, dirtyShirts, n;
+  int temp;
+  for (t, 0, 10) {
 
-    cin >> shirtNum >> eventNum >> numDays;
-    int laundryTimes{0};
-    int dirtyShirts{0};
-    int eventDays[eventNum];
-    int currentEventDay{0};
-
-    for (int i = 0; i < eventNum; i++) {
-      cin >> eventDays[i];
+    cin >> numShirts >> numEvents >> numDays;
+    int events[numDays+1]{};
+    for (i, 0, numEvents) {
+      cin >> temp;
+      events[temp]++;
     }
-    sort(eventDays, eventDays+eventNum);
-    //display
-    // for (int i = 0; i < eventNum; i++) {
-    //   cout << eventDays[i] << ' ';
-    // }
-    // cout << '\n';
-
-    //calculate
-    for (int i = 1; i <= numDays; i++) {
-      if (dirtyShirts == shirtNum) {
-        // cout << shirtNum << ' ' << dirtyShirts << '\n';
+    dirtyShirts = 0;
+    n = 0;
+    for(i, 1, numDays+1) {
+      if (dirtyShirts == numShirts) {
+        n++;
         dirtyShirts = 0;
-        laundryTimes++;
       }
-      if (eventDays[currentEventDay] == i) {
-        shirtNum++;
-        if (currentEventDay < eventNum-1) currentEventDay++;
-      }
-
+      numShirts += events[i];
       dirtyShirts++;
     }
-
-    cout << laundryTimes << '\n';
-
+    cout << n << '\n';
   }
 
   return 0;

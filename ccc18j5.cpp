@@ -1,4 +1,3 @@
-//to be completed later
 #include <bits/stdc++.h>
 
 using namespace std;
@@ -10,7 +9,6 @@ bool visited[10001]{false};
 char allVisited(bool const (&visited)[10001], int pageNum) {
   for (int i = 1; i <= pageNum; i++) {
     if (!visited[i]) {
-      // cout << i;
       return 'N';
     }
   }
